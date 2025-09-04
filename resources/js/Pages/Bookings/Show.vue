@@ -6,7 +6,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-20">
             <!-- Villa Title & Info -->
             <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ booking.villa.title }} - Rezervasyon Detayı</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ booking?.villa?.title || 'Villa' }} - Rezervasyon Detayı</h1>
                 <div class="flex flex-wrap items-center gap-4 text-sm">
                     <div class="flex items-center">
                         <StarIcon class="h-4 w-4 text-yellow-400 fill-current mr-1" />
@@ -27,7 +27,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <h1 class="text-2xl font-bold text-white">Rezervasyon #{{ booking.id }}</h1>
-                            <p class="text-blue-100 mt-1">{{ booking.villa.title }}</p>
+                            <p class="text-blue-100 mt-1">{{ booking?.villa?.title || 'Villa' }}</p>
                         </div>
                         <span :class="statusClasses" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium">
                             <span class="w-2 h-2 rounded-full mr-2" :class="statusDotClasses"></span>
@@ -45,11 +45,11 @@
                             <div class="flex items-start space-x-3">
                                 <img 
                                     :src="villaImage" 
-                                    :alt="booking.villa.title"
+                                    :alt="booking?.villa?.title || 'Villa'"
                                     class="w-16 h-16 rounded-lg object-cover"
                                 >
                                 <div class="flex-1">
-                                    <h4 class="font-medium text-gray-900">{{ booking.villa.title }}</h4>
+                                    <h4 class="font-medium text-gray-900">{{ booking?.villa?.title || 'Villa' }}</h4>
                                     <p class="text-gray-600 text-sm flex items-center mt-1">
                                         <MapPinIcon class="w-4 h-4 mr-1" />
                                         {{ booking.villa.location }}

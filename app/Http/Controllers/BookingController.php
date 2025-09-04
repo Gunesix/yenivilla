@@ -165,6 +165,9 @@ class BookingController extends Controller
             return back()->withErrors(['status' => 'Only pending bookings can be edited.']);
         }
 
+        // Load villa with images and amenities
+        $booking->load(['villa.images', 'villa.amenities', 'user']);
+
         return Inertia::render('Bookings/Edit', [
             'booking' => $booking
         ]);

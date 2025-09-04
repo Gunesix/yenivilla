@@ -6,7 +6,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-20">
             <!-- Villa Title & Info -->
             <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ villa.title }} - Rezervasyon</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ villa?.title || 'Villa' }} - Rezervasyon</h1>
                 <div class="flex flex-wrap items-center gap-4 text-sm">
                     <div class="flex items-center">
                         <StarIcon class="h-4 w-4 text-yellow-400 fill-current mr-1" />
@@ -84,7 +84,7 @@
                                         <div class="lg:w-1/3">
                                             <img 
                                                 :src="villa.images?.[0]?.image_url || `https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20villa%20${villa.id}&image_size=landscape_4_3`" 
-                                                :alt="villa.title"
+                                                :alt="villa?.title || 'Villa'"
                                                 class="w-full h-48 lg:h-56 rounded-xl object-cover shadow-lg"
                                             >
                                         </div>
@@ -92,7 +92,7 @@
                                         <!-- Villa Info -->
                                         <div class="lg:w-2/3 space-y-4">
                                             <div>
-                                                <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ villa.title }}</h3>
+                                                <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ villa?.title || 'Villa' }}</h3>
                                                 <p class="text-gray-600 flex items-center mb-3">
                                                     <MapPinIcon class="w-5 h-5 mr-2 text-blue-500" />
                                                     {{ villa.location }}

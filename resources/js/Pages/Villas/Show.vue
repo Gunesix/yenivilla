@@ -7,7 +7,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-20">
             <!-- Villa Title & Info -->
             <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ villa.title }}</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ villa?.title || 'Villa' }}</h1>
                 <div class="flex flex-wrap items-center gap-4 text-sm">
                     <div class="flex items-center">
                         <StarIcon class="h-4 w-4 text-yellow-400 fill-current mr-1" />
@@ -33,7 +33,7 @@
                     <div class="absolute inset-0 transition-all duration-500 ease-in-out">
                         <img 
                             :src="currentSlideImage"
-                            :alt="villa.title"
+                            :alt="villa?.title || 'Villa'"
                             class="w-full h-full object-cover"
                         />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
