@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villa Elysian - Deniz Manzaralı Lüks Tatil Villası</title>
+    
+    <!-- Google Fonts: Modern ve okunaklı bir yazı tipi olan Inter'i kullanıyoruz -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS: Hızlı ve modern prototipleme için CDN üzerinden eklenmiştir -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Tailwind'e ek olarak özel stiller */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Sticky sidebar'ın üstten boşluğunu ayarlamak için */
+        .sticky-sidebar {
+            top: 1.5rem; /* 24px */
+        }
+
+        /* Fotoğraf galerisindeki resimlerin üzerine gelince hafif bir büyüme efekti */
+        .gallery-image {
+            transition: transform 0.3s ease-in-out;
+        }
+        .gallery-image:hover {
+            transform: scale(1.03);
+            filter: brightness(0.9);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- =================================================================
+    HEADER (Vue Componenti: TheHeader.vue)
+    ================================================================== -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto max-w-6xl px-4 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-bold text-indigo-600">VillaCation</a>
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center space-x-8 font-semibold">
+                <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors">Keşfet</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors">Popüler Villalar</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors">Hakkımızda</a>
+            </div>
+            <!-- Login Button -->
+            <a href="#" class="bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
+                Giriş Yap
+            </a>
+        </nav>
+    </header>
+
+
+    <!-- Ana Konteyner -->
+    <div class="container mx-auto max-w-6xl px-4 py-8">
+
+        <!-- =================================================================
+        VILLA BAŞLIK BÖLÜMÜ (Vue Componenti: VillaHeader.vue)
+        ================================================================== -->
+        <section class="mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Villa Elysian</h1>
+            <div class="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-gray-600">
+                <div class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                    <span class="font-semibold">4.95</span>
+                    <span class="text-gray-500">(142 değerlendirme)</span>
+                </div>
+                <div class="flex items-center gap-1">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+                    <span>Kaş, Çukurbağ Yarımadası, Antalya</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        FOTOĞRAF GALERİSİ (Vue Componenti: VillaGallery.vue)
+        ================================================================== -->
+        <section class="mb-10 grid grid-cols-4 grid-rows-2 gap-2 h-[500px] rounded-2xl overflow-hidden">
+            <div class="col-span-4 md:col-span-2 row-span-2 cursor-pointer"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto-format&fit=crop" alt="Villa ana görünümü" class="w-full h-full object-cover gallery-image"></div>
+            <div class="hidden md:block cursor-pointer"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop" alt="Villa havuzu" class="w-full h-full object-cover gallery-image"></div>
+            <div class="hidden md:block cursor-pointer"><img src="https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?q=80&w=1974&auto-format&fit=crop" alt="Villa yatak odası" class="w-full h-full object-cover gallery-image"></div>
+            <div class="hidden md:block cursor-pointer"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto-format&fit=crop" alt="Villa salonu" class="w-full h-full object-cover gallery-image"></div>
+            <div class="hidden md:block cursor-pointer relative">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto-format&fit=crop" alt="Villa dış cephesi" class="w-full h-full object-cover gallery-image">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"><button class="bg-white text-gray-800 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition">Tüm Resimler</button></div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div class="lg:col-span-2">
+                <div class="pb-6 border-b border-gray-200">
+                    <h2 class="text-2xl font-semibold mb-3">Ev Sahibi: Mehmet Bey</h2>
+                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-gray-600"><span>10 misafir</span> &middot; <span>5 yatak odası</span> &middot; <span>5 yatak</span> &middot; <span>5 banyo</span></div>
+                </div>
+                <div class="py-6 border-b border-gray-200 space-y-4">
+                    <div class="flex items-start gap-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><div><h3 class="font-semibold">Panoramik Deniz Manzarası</h3><p class="text-gray-500 text-sm">Villanın her odasından ve havuz terasından kesintisiz Akdeniz manzarasının keyfini çıkarın.</p></div></div>
+                    <div class="flex items-start gap-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg><div><h3 class="font-semibold">Sonsuzluk Havuzu</h3><p class="text-gray-500 text-sm">Güneşin tadını çıkarabileceğiniz, denizle birleşen özel sonsuzluk havuzu.</p></div></div>
+                </div>
+                <div class="py-6 border-b border-gray-200"><h2 class="text-2xl font-semibold mb-4">Açıklama</h2><p class="text-gray-600 leading-relaxed">Kaş'ın en prestijli bölgelerinden Çukurbağ Yarımadası'nda konumlanan Villa Elysian, modern mimarisi ve lüks detayları ile size unutulmaz bir tatil vadediyor. Geniş aileler ve arkadaş grupları için tasarlanan villamız, 5 süit yatak odası ile 10 kişiye kadar konforlu bir konaklama imkanı sunar. Tam donanımlı mutfağı, geniş salonu ve her odasından görünen büyüleyici deniz manzarası ile kendinizi özel hissedeceksiniz.</p><button class="mt-4 font-semibold text-indigo-600 hover:text-indigo-800">Daha fazla göster</button></div>
+                <div class="py-6 border-b border-gray-200"><h2 class="text-2xl font-semibold mb-4">Olanaklar</h2><div class="grid grid-cols-2 gap-x-4 gap-y-3"><div class="flex items-center gap-2">✔️ Wi-Fi</div><div class="flex items-center gap-2">✔️ Klima</div><div class="flex items-center gap-2">✔️ Özel Havuz</div><div class="flex items-center gap-2">✔️ Jakuzi</div><div class="flex items-center gap-2">✔️ Tam Donanımlı Mutfak</div><div class="flex items-center gap-2">✔️ Barbekü</div><div class="flex items-center gap-2">✔️ Otopark</div><div class="flex items-center gap-2">✔️ TV</div></div></div>
+
+                <!-- =================================================================
+                UYGUNLUK TAKVİMİ (Vue Componenti: AvailabilityCalendar.vue)
+                API'den gelen dolu tarihler burada işaretlenmeli.
+                ================================================================== -->
+                <div class="py-6 border-b border-gray-200">
+                    <h2 class="text-2xl font-semibold mb-4">Uygunluk Takvimi</h2>
+                    <div class="p-4 bg-white rounded-lg border">
+                        <div class="flex justify-between items-center mb-4"><button class="p-2 rounded-full hover:bg-gray-100">&lt;</button><h3 class="font-semibold text-lg">Eylül 2025</h3><button class="p-2 rounded-full hover:bg-gray-100">&gt;</button></div>
+                        <div class="grid grid-cols-7 gap-1 text-center text-sm">
+                            <div class="font-semibold text-gray-500 py-2">Pzt</div><div class="font-semibold text-gray-500 py-2">Sal</div><div class="font-semibold text-gray-500 py-2">Çar</div><div class="font-semibold text-gray-500 py-2">Per</div><div class="font-semibold text-gray-500 py-2">Cum</div><div class="font-semibold text-gray-500 py-2">Cmt</div><div class="font-semibold text-gray-500 py-2">Paz</div>
+                            <div class="py-2">1</div><div class="py-2">2</div><div class="py-2">3</div><div class="py-2">4</div>
+                            <div class="py-2 rounded-full bg-red-100 text-red-700 line-through">5</div>
+                            <div class="py-2 rounded-full bg-red-100 text-red-700 line-through">6</div>
+                            <div class="py-2 rounded-full bg-red-100 text-red-700 line-through">7</div>
+                            <div class="py-2">8</div><div class="py-2">9</div><div class="py-2">10</div><div class="py-2">11</div><div class="py-2">12</div><div class="py-2">13</div><div class="py-2">14</div>
+                            <div class="py-2">15</div><div class="py-2">16</div><div class="py-2">17</div><div class="py-2">18</div><div class="py-2">19</div>
+                            <div class="py-2 rounded-full bg-red-100 text-red-700 line-through">20</div>
+                            <div class="py-2 rounded-full bg-red-100 text-red-700 line-through">21</div>
+                            <div class="py-2">22</div><div class="py-2">23</div><div class="py-2">24</div><div class="py-2">25</div><div class="py-2">26</div><div class="py-2">27</div><div class="py-2">28</div>
+                            <div class="py-2">29</div><div class="py-2">30</div>
+                            <div class="text-gray-300 py-2">1</div> <div class="text-gray-300 py-2">2</div> <div class="text-gray-300 py-2">3</div> <div class="text-gray-300 py-2">4</div> <div class="text-gray-300 py-2">5</div>
+                        </div>
+                        <div class="mt-4 flex items-center gap-4 text-sm"><div class="flex items-center gap-2"><span class="w-4 h-4 bg-white border rounded-full"></span> Müsait</div><div class="flex items-center gap-2"><span class="w-4 h-4 bg-red-100 rounded-full"></span> Dolu</div></div>
+                    </div>
+                </div>
+
+                <div class="py-6 border-b border-gray-200"><h2 class="text-2xl font-semibold mb-4">⭐ 4.95 (142 değerlendirme)</h2><div class="space-y-6"><div class="review-item"><div class="flex items-center gap-3 mb-2"><img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Kullanıcı avatarı" class="h-10 w-10 rounded-full"><div><p class="font-semibold">Ayşe T.</p><p class="text-xs text-gray-500">Ağustos 2024</p></div></div><p class="text-gray-600">Tek kelimeyle harika. Konum, manzara, evin temizliği ve donanımı kusursuzdu. Mehmet Bey her konuda çok yardımcı oldu. Unutulmaz bir tatil geçirdik.</p></div><div class="review-item"><div class="flex items-center gap-3 mb-2"><img src="https://i.pravatar.cc/150?u=a042581f4e29026703d" alt="Kullanıcı avatarı" class="h-10 w-10 rounded-full"><div><p class="font-semibold">Burak G.</p><p class="text-xs text-gray-500">Temmuz 2024</p></div></div><p class="text-gray-600">Fotoğraflarda ne görüyorsanız fazlası var eksiği yok. Özellikle sonsuzluk havuzu ve manzarası inanılmazdı. Kesinlikle tavsiye ederim.</p></div></div></div>
+
+                <!-- =================================================================
+                YAKINDAKİ AKTİVİTELER (Vue Componenti: NearbyActivities.vue)
+                ================================================================== -->
+                <div class="py-6 border-b border-gray-200">
+                    <h2 class="text-2xl font-semibold mb-4">Bölgedeki Aktiviteler</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-lg overflow-hidden border group cursor-pointer"><img src="https://images.unsplash.com/photo-1601004118815-23b2c589b828?q=80&w=1974&auto=format&fit=crop" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Kaputaş Plajı"><div class="p-4"><h3 class="font-semibold">Kaputaş Plajı</h3><p class="text-sm text-gray-600">Dünyaca ünlü turkuaz suları ile ünlü plaj.</p></div></div>
+                        <div class="bg-white rounded-lg overflow-hidden border group cursor-pointer"><img src="https://images.unsplash.com/photo-1632344079867-3331de86d267?q=80&w=2070&auto=format&fit=crop" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Saklıkent Kanyonu"><div class="p-4"><h3 class="font-semibold">Saklıkent Kanyonu</h3><p class="text-sm text-gray-600">Buz gibi sularında yürüyüş yapabileceğiniz doğa harikası.</p></div></div>
+                        <div class="bg-white rounded-lg overflow-hidden border group cursor-pointer"><img src="https://images.unsplash.com/photo-1594964669385-a7644f54665a?q=80&w=2070&auto=format&fit=crop" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Kekova Tekne Turu"><div class="p-4"><h3 class="font-semibold">Kekova Tekne Turu</h3><p class="text-sm text-gray-600">Batık şehri ve eşsiz koyları keşfedin.</p></div></div>
+                        <div class="bg-white rounded-lg overflow-hidden border group cursor-pointer"><img src="https://images.unsplash.com/photo-1627888798422-5f33f3803185?q=80&w=2070&auto=format&fit=crop" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Patara Antik Kenti"><div class="p-4"><h3 class="font-semibold">Patara Antik Kenti</h3><p class="text-sm text-gray-600">Tarihi ve eşsiz kumsalı bir arada yaşayın.</p></div></div>
+                    </div>
+                </div>
+
+                <!-- =================================================================
+                KONUM (Vue Componenti: VillaLocation.vue)
+                ================================================================== -->
+                <div class="py-6">
+                    <h2 class="text-2xl font-semibold mb-4">Konum</h2>
+                    <p class="text-gray-600 mb-4">Villa Elysian, Kaş, Çukurbağ Yarımadası, Antalya</p>
+                    <div class="rounded-lg overflow-hidden border aspect-video">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51221.46944883311!2d29.58498084282548!3d36.18439369324021!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14c001b122558661%3A0x2863e11f0714249a!2sKa%C5%9F%2C%20Antalya!5e0!3m2!1str!2str!4v1725284898443!5m2!1str!2str" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SAĞ SÜTUN: Rezervasyon Paneli -->
+            <div class="lg:col-span-1">
+                <div class="sticky sticky-sidebar bg-white p-6 rounded-2xl border border-gray-200 shadow-lg">
+                    <div class="mb-4"><span class="text-2xl font-bold">₺12,500</span><span class="text-gray-600">/ gece</span></div>
+                    <div class="grid grid-cols-2 gap-2 border border-gray-300 rounded-lg p-1 mb-4">
+                        <div><label for="checkin" class="block text-xs font-semibold text-gray-500 px-2">GİRİŞ</label><input type="text" id="checkin" placeholder="Tarih ekle" class="w-full border-none focus:ring-0 p-2 text-sm"></div>
+                        <div class="border-l border-gray-300"><label for="checkout" class="block text-xs font-semibold text-gray-500 px-2">ÇIKIŞ</label><input type="text" id="checkout" placeholder="Tarih ekle" class="w-full border-none focus:ring-0 p-2 text-sm"></div>
+                    </div>
+                    <div class="border border-gray-300 rounded-lg p-1 mb-4"><label for="guests" class="block text-xs font-semibold text-gray-500 px-2">MİSAFİRLER</label><select id="guests" class="w-full border-none focus:ring-0 p-2 text-sm"><option>1 misafir</option><option>2 misafir</option><option>3 misafir</option><option>4 misafir</option><option>5 misafir</option><option>6 misafir</option></select></div>
+                    <button class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors shadow-md">Rezervasyon Yap</button>
+                    <div class="mt-6 space-y-2 text-sm">
+                        <div class="flex justify-between"><span class="text-gray-600">₺12,500 x 7 gece</span><span>₺87,500</span></div>
+                        <div class="flex justify-between"><span class="text-gray-600">Temizlik ücreti</span><span>₺1,500</span></div>
+                        <div class="flex justify-between"><span class="text-gray-600">Hizmet bedeli</span><span>₺4,500</span></div>
+                        <div class="pt-4 mt-2 border-t border-gray-200 flex justify-between font-bold text-base"><span>Toplam Tutar</span><span>₺93,500</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- =================================================================
+    FOOTER (Vue Componenti: TheFooter.vue)
+    ================================================================== -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto max-w-6xl px-4 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="font-semibold mb-4 text-lg">VillaCation</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-white">Hakkımızda</a></li>
+                        <li><a href="#" class="hover:text-white">Kariyer</a></li>
+                        <li><a href="#" class="hover:text-white">Basın</a></li>
+                        <li><a href="#" class="hover:text-white">İletişim</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Keşfet</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-white">Muğla Villaları</a></li>
+                        <li><a href="#" class="hover:text-white">Antalya Villaları</a></li>
+                        <li><a href="#" class="hover:text-white">Balayı Villaları</a></li>
+                        <li><a href="#" class="hover:text-white">Denize Sıfır</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Destek</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-white">Yardım Merkezi</a></li>
+                        <li><a href="#" class="hover:text-white">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="#" class="hover:text-white">İptal Seçenekleri</a></li>
+                        <li><a href="#" class="hover:text-white">Güvenlik</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Bizi Takip Edin</h3>
+                     <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.345 2.525c.636-.247 1.363-.416 2.427-.465C9.793 2.013 10.148 2 12.315 2zm-1.161 1.943c-1.064-.042-1.69-.199-2.227-.412a3.052 3.052 0 00-1.171.802 3.052 3.052 0 00-.802 1.171c-.213.537-.37 1.163-.412 2.227-.043 1.004-.055 1.32-.055 3.767s.012 2.763.055 3.767c.042 1.064.199 1.69.412 2.227a3.052 3.052 0 00.802 1.171 3.052 3.052 0 001.171.802c.537.213 1.163.37 2.227.412 1.004.043 1.32.055 3.767.055s2.763-.012 3.767-.055c1.064-.042 1.69-.199 2.227-.412a3.052 3.052 0 001.171-.802 3.052 3.052 0 00.802-1.171c.213-.537.37-1.163.412-2.227.043-1.004.055-1.32.055-3.767s-.012-2.763-.055-3.767c-.042-1.064-.199-1.69-.412-2.227a3.052 3.052 0 00-.802-1.171 3.052 3.052 0 00-1.171-.802c-.537-.213-1.163-.37-2.227-.412-1.004-.043-1.32-.055-3.767-.055s-2.763.012-3.767.055z" clip-rule="evenodd" /><path d="M16.92 7.729a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5zM12 15.25a3.25 3.25 0 100-6.5 3.25 3.25 0 000 6.5zM12 8.25a3.75 3.75 0 110 7.5 3.75 3.75 0 010-7.5z" /></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-6 text-center text-sm text-gray-400">
+                &copy; 2025 VillaCation. Tüm hakları saklıdır.
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+</html>
+
