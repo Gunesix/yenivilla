@@ -176,6 +176,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/villas/{villa}', [AdminVillaController::class, 'update'])->name('admin.villas.update');
         Route::delete('/villas/{villa}', [AdminVillaController::class, 'destroy'])->name('admin.villas.destroy');
         
+        // Note: Villa pricing and availability management is now integrated into villa edit page as tabs
+        
         // Booking Management
         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
         Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
@@ -218,6 +220,24 @@ Route::prefix('admin')->group(function () {
         Route::put('/settings/email', [AdminSettingsController::class, 'updateEmail'])->name('admin.settings.email');
         Route::post('/settings/test-email', [AdminSettingsController::class, 'testEmail'])->name('admin.settings.test-email');
         Route::post('/settings/upload-logo', [AdminSettingsController::class, 'uploadLogo'])->name('admin.settings.upload-logo');
+        
+        // Villa Pricing Management
+        Route::get('/villa-pricing', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'index'])->name('admin.villa-pricing.index');
+        Route::get('/villa-pricing/create', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'create'])->name('admin.villa-pricing.create');
+        Route::post('/villa-pricing', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'store'])->name('admin.villa-pricing.store');
+        Route::get('/villa-pricing/{pricing}/edit', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'edit'])->name('admin.villa-pricing.edit');
+        Route::put('/villa-pricing/{pricing}', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'update'])->name('admin.villa-pricing.update');
+        Route::delete('/villa-pricing/{pricing}', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'destroy'])->name('admin.villa-pricing.destroy');
+        Route::get('/villa-pricing/calendar', [\App\Http\Controllers\Admin\AdminVillaPricingController::class, 'calendar'])->name('admin.villa-pricing.calendar');
+        
+        // Villa Availability Management
+        Route::get('/villa-availability', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'index'])->name('admin.villa-availability.index');
+        Route::get('/villa-availability/create', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'create'])->name('admin.villa-availability.create');
+        Route::post('/villa-availability', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'store'])->name('admin.villa-availability.store');
+        Route::get('/villa-availability/{availability}/edit', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'edit'])->name('admin.villa-availability.edit');
+        Route::put('/villa-availability/{availability}', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'update'])->name('admin.villa-availability.update');
+        Route::delete('/villa-availability/{availability}', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'destroy'])->name('admin.villa-availability.destroy');
+        Route::get('/villa-availability/calendar', [\App\Http\Controllers\Admin\AdminVillaAvailabilityController::class, 'calendar'])->name('admin.villa-availability.calendar');
         
         // Logout
         Route::post('/logout', function () {

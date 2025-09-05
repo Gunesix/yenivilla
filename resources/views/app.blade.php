@@ -12,7 +12,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Google Maps API -->
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy0AKgDAi8IKBd-W4P1M9N_BacoBJWEF0&libraries=places"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy0AKgDAi8IKBd-W4P1M9N_BacoBJWEF0&libraries=places&loading=async"></script>
         
         <!-- Scripts -->
         @routes

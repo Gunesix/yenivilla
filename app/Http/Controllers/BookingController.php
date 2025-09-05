@@ -74,7 +74,7 @@ class BookingController extends Controller
             'villa_id' => 'required|exists:villas,id',
             'check_in' => 'required|date|after:today',
             'check_out' => 'required|date|after:check_in',
-            'guests' => 'required|integer|min:1',
+            'guests' => 'nullable|integer|min:1',
             'total_amount' => 'nullable|numeric|min:0'
         ]);
 
@@ -83,6 +83,11 @@ class BookingController extends Controller
         $validated['guest_email'] = Auth::user()->email;
 
         $villa = Villa::findOrFail($validated['villa_id']);
+
+        // Use max_guests as default if no guest count provided
+        if (empty($validated['guests'])) {
+            $validated['guests'] = $villa->max_guests;
+        }
 
         // Check if villa can accommodate guests
         if ($validated['guests'] > $villa->max_guests) {
@@ -187,12 +192,17 @@ class BookingController extends Controller
         $validated = $request->validate([
             'check_in' => 'required|date|after:today',
             'check_out' => 'required|date|after:check_in',
-            'guests' => 'required|integer|min:1|max:' . $booking->villa->max_guests,
+            'guests' => 'nullable|integer|min:1|max:' . $booking->villa->max_guests,
             'guest_name' => 'required|string|max:255',
             'guest_email' => 'required|email|max:255',
             'guest_phone' => 'nullable|string|max:20',
             'special_requests' => 'nullable|string|max:1000'
         ]);
+
+        // Use max_guests as default if no guest count provided
+        if (empty($validated['guests'])) {
+            $validated['guests'] = $booking->villa->max_guests;
+        }
 
         // Recalculate total amount if dates changed
         if ($validated['check_in'] !== $booking->check_in->format('Y-m-d') || 

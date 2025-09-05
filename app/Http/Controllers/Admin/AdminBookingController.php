@@ -158,47 +158,60 @@ class AdminBookingController extends Controller
     }
 
     /**
-     * Get calendar data for bookings
+     * Get calendar view for bookings
      */
     public function calendar(Request $request)
     {
-        $query = Booking::with(['villa', 'user'])
-            ->whereIn('status', ['confirmed', 'pending']);
+        // If this is an AJAX request for calendar data, return JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            $query = Booking::with(['villa', 'user'])
+                ->whereIn('status', ['confirmed', 'pending']);
 
-        // Filter by villa if specified
-        if ($request->has('villa_id')) {
-            $query->where('villa_id', $request->villa_id);
+            // Filter by villa if specified
+            if ($request->has('villa_id')) {
+                $query->where('villa_id', $request->villa_id);
+            }
+
+            // Filter by date range
+            if ($request->has('start')) {
+                $query->where('check_out', '>=', $request->start);
+            }
+            if ($request->has('end')) {
+                $query->where('check_in', '<=', $request->end);
+            }
+
+            $bookings = $query->get()->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'title' => $booking->villa->name . ' - ' . $booking->user->name,
+                    'start' => $booking->check_in,
+                    'end' => $booking->check_out,
+                    'color' => $booking->status === 'confirmed' ? '#10b981' : '#f59e0b',
+                    'extendedProps' => [
+                        'booking_id' => $booking->id,
+                        'villa_id' => $booking->villa_id,
+                        'villa_name' => $booking->villa->name,
+                        'user_name' => $booking->user->name,
+                        'status' => $booking->status,
+                        'total_amount' => $booking->total_amount,
+                    ],
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => $bookings,
+            ]);
         }
 
-        // Filter by date range
-        if ($request->has('start')) {
-            $query->where('check_out', '>=', $request->start);
-        }
-        if ($request->has('end')) {
-            $query->where('check_in', '<=', $request->end);
-        }
+        // For regular page requests, return Inertia view
+        $villas = \App\Models\Villa::select('id', 'name')->orderBy('name')->get();
 
-        $bookings = $query->get()->map(function ($booking) {
-            return [
-                'id' => $booking->id,
-                'title' => $booking->villa->name . ' - ' . $booking->user->name,
-                'start' => $booking->check_in,
-                'end' => $booking->check_out,
-                'color' => $booking->status === 'confirmed' ? '#10b981' : '#f59e0b',
-                'extendedProps' => [
-                    'booking_id' => $booking->id,
-                    'villa_id' => $booking->villa_id,
-                    'villa_name' => $booking->villa->name,
-                    'user_name' => $booking->user->name,
-                    'status' => $booking->status,
-                    'total_amount' => $booking->total_amount,
-                ],
-            ];
-        });
-
-        return response()->json([
-            'success' => true,
-            'data' => $bookings,
+        return Inertia::render('Admin/Bookings/Calendar', [
+            'villas' => $villas,
+            'auth' => [
+                'user' => \Illuminate\Support\Facades\Auth::guard('admin')->user()
+            ]
         ]);
     }
 }

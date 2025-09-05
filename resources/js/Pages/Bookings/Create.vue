@@ -170,15 +170,15 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-900 mb-2">Misafir Sayısı</label>
+                                <label class="block text-sm font-medium text-gray-900 mb-2">Misafir Sayısı (Opsiyonel)</label>
                                 <select 
                                     v-model="form.guests"
-                                    required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                 >
-                                    <option value="">Misafir sayısını seçin</option>
+                                    <option value="">Maksimum {{ villa.max_guests }} misafir</option>
                                     <option v-for="i in villa.max_guests" :key="i" :value="i">{{ i }} Misafir</option>
                                 </select>
+                                <p class="text-xs text-gray-600 mt-1">Seçilmezse maksimum misafir sayısı ({{ villa.max_guests }}) kullanılır</p>
                             </div>
 
                             <div>
@@ -429,7 +429,6 @@ const totalAmount = computed(() => {
 const isFormValid = computed(() => {
     const basicValid = form.value.check_in && 
                       form.value.check_out && 
-                      form.value.guests && 
                       form.value.payment_method
     
     if (form.value.payment_method === 'stripe') {
@@ -1060,7 +1059,7 @@ const submitBooking = async () => {
             villa_id: form.value.villa_id,
             check_in: form.value.check_in,
             check_out: form.value.check_out,
-            guests: form.value.guests,
+            guests: form.value.guests || props.villa.max_guests, // Use max_guests as default
             total_amount: totalAmount.value,
             special_requests: form.value.special_requests
         }

@@ -332,23 +332,29 @@
                             </div>
                             
                             <div>
-                                <label class="block text-xs font-semibold text-gray-800 mb-2">Misafir Sayısı</label>
+                                <label class="block text-xs font-semibold text-gray-800 mb-2">Misafir Sayısı (Opsiyonel)</label>
                                 <select 
                                     v-model="bookingForm.guests" 
                                     class="w-full px-3 py-2 bg-white/30 border border-white/40 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 backdrop-blur-sm font-medium text-sm"
-                                    required
                                 >
-                                    <option value="">Seçiniz</option>
+                                    <option value="">Maksimum {{ villa.max_guests }} misafir</option>
                                     <option v-for="i in villa.max_guests" :key="i" :value="i">{{ i }} Misafir</option>
                                 </select>
+                                <p class="text-xs text-gray-600 mt-1">Seçilmezse maksimum misafir sayısı ({{ villa.max_guests }}) kullanılır</p>
                             </div>
                             
                             <button 
                                 type="submit" 
-                                :disabled="isCheckingAvailability"
-                                class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-bold text-sm shadow-lg disabled:opacity-50"
+                                :disabled="isCheckingAvailability || !isFormValid"
+                                :class="[
+                                    'w-full py-3 px-4 rounded-lg transition-all font-bold text-sm shadow-lg',
+                                    isFormValid && !isCheckingAvailability
+                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
+                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                ]"
                             >
                                 <span v-if="isCheckingAvailability">Kontrol Ediliyor...</span>
+                                <span v-else-if="!isFormValid">Lütfen tarih aralığı seçin</span>
                                 <span v-else>Müsaitlik Kontrol Et</span>
                             </button>
                         </form>
@@ -476,9 +482,16 @@
                                 
                                 <button 
                                     @click="makeReservation" 
-                                    class="w-full bg-green-600 text-white py-2 px-3 rounded-lg hover:bg-green-700 transition-colors font-semibold mt-3 text-sm"
+                                    :disabled="!availabilityResult?.available"
+                                    :class="[
+                                        'w-full py-2 px-3 rounded-lg transition-colors font-semibold mt-3 text-sm',
+                                        availabilityResult?.available
+                                            ? 'bg-green-600 text-white hover:bg-green-700'
+                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    ]"
                                 >
-                                    Rezervasyon Yap
+                                    <span v-if="availabilityResult?.available">Rezervasyon Yap</span>
+                                    <span v-else>Villa Müsait Değil</span>
                                 </button>
                             </div>
                         </div>
@@ -698,6 +711,13 @@ const totalAmount = computed(() => {
     return 0
 })
 
+// Form validation
+const isFormValid = computed(() => {
+    return bookingForm.value.check_in && 
+           bookingForm.value.check_out && 
+           new Date(bookingForm.value.check_out) > new Date(bookingForm.value.check_in)
+})
+
 // Calendar computed values
 const currentMonthYear = computed(() => {
     const months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
@@ -723,17 +743,65 @@ const calendarDays = computed(() => {
         const dateStr = date.toISOString().split('T')[0]
         const isCurrentMonth = date.getMonth() === month
         const isToday = date.toDateString() === today.toDateString()
-        const isAvailable = !bookedDates.value.includes(dateStr) && date >= today
+        // Check availability from villa availabilities data
+        let isAvailable = date >= today
+        if (props.villa.availabilities && props.villa.availabilities.length > 0) {
+            const availabilityRecord = props.villa.availabilities.find(avail => avail.date === dateStr)
+            if (availabilityRecord) {
+                // Check both is_available field and status field for proper availability
+                const isRecordAvailable = availabilityRecord.is_available === true || availabilityRecord.status === 'available'
+                const isRecordBlocked = availabilityRecord.is_available === false || availabilityRecord.status === 'blocked'
+                
+                if (isRecordBlocked) {
+                    isAvailable = false
+                } else if (isRecordAvailable) {
+                    isAvailable = date >= today
+                }
+                
+                // Debug log for availability check
+                console.log('Availability check for date:', dateStr, {
+                    is_available: availabilityRecord.is_available,
+                    status: availabilityRecord.status,
+                    final_isAvailable: isAvailable,
+                    date_check: date >= today
+                })
+            }
+        }
+        // Also check booked dates
+        if (bookedDates.value.includes(dateStr)) {
+            isAvailable = false
+        }
         const isSelected = selectedDates.value.includes(dateStr)
         const isInRange = selectedDates.value.length === 2 && 
                          dateStr >= selectedDates.value[0] && 
                          dateStr <= selectedDates.value[1]
         
-        // Calculate price variation (weekend premium)
+        // Calculate price for this date
         const dayOfWeek = date.getDay()
         const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
-        const priceMultiplier = isWeekend ? 1.2 : 1
-        const dayPrice = Math.round(props.villa.price_per_night * priceMultiplier)
+        
+        // Check if there's a specific pricing for this date
+        let dayPrice = props.villa.price_per_night
+        if (props.villa.pricings && props.villa.pricings.length > 0) {
+            const specificPricing = props.villa.pricings.find(pricing => {
+                const startDate = new Date(pricing.start_date)
+                const endDate = new Date(pricing.end_date)
+                return date >= startDate && date <= endDate
+            })
+            if (specificPricing) {
+                dayPrice = specificPricing.price_per_night
+            }
+        }
+        
+        // Apply weekend premium if no specific pricing
+        if (!props.villa.pricings?.find(p => {
+            const startDate = new Date(p.start_date)
+            const endDate = new Date(p.end_date)
+            return date >= startDate && date <= endDate
+        })) {
+            const priceMultiplier = isWeekend ? 1.2 : 1
+            dayPrice = Math.round(dayPrice * priceMultiplier)
+        }
         
         days.push({
             date: dateStr,
@@ -864,9 +932,66 @@ const selectDate = (date) => {
     availabilityResult.value = null
 }
 
+// Check if all dates in range are available
+const checkDateRangeAvailability = (startDate, endDate) => {
+    if (!startDate || !endDate) return { available: false, message: 'Lütfen giriş ve çıkış tarihlerini seçin.' }
+    
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const unavailableDates = []
+    
+    // Check each date in the range
+    for (let date = new Date(start); date < end; date.setDate(date.getDate() + 1)) {
+        const dateStr = date.toISOString().split('T')[0]
+        
+        // Check if date is in booked dates
+        if (bookedDates.value.includes(dateStr)) {
+            unavailableDates.push(dateStr)
+            continue
+        }
+        
+        // Check villa availability records
+        if (props.villa.availabilities && props.villa.availabilities.length > 0) {
+            const availabilityRecord = props.villa.availabilities.find(avail => avail.date === dateStr)
+            if (availabilityRecord) {
+                const isRecordBlocked = availabilityRecord.is_available === false || availabilityRecord.status === 'blocked'
+                if (isRecordBlocked) {
+                    unavailableDates.push(dateStr)
+                }
+            }
+        }
+    }
+    
+    if (unavailableDates.length > 0) {
+        const formattedDates = unavailableDates.map(date => formatDate(date)).join(', ')
+        return {
+            available: false,
+            message: `Villa seçilen tarihler arasında müsait değil. Dolu tarihler: ${formattedDates}`,
+            unavailableDates
+        }
+    }
+    
+    return {
+        available: true,
+        message: 'Villa seçilen tarihler için müsait!'
+    }
+}
+
 const checkAvailability = async () => {
     isCheckingAvailability.value = true
     availabilityResult.value = null
+    
+    // First check locally for blocked dates
+    const localCheck = checkDateRangeAvailability(bookingForm.value.check_in, bookingForm.value.check_out)
+    
+    if (!localCheck.available) {
+        availabilityResult.value = localCheck
+        isCheckingAvailability.value = false
+        return
+    }
+    
+    // Use max_guests as default if no guest count selected
+    const guestCount = bookingForm.value.guests || props.villa.max_guests
     
     try {
         // Use Inertia.js router.post for proper CSRF handling
@@ -874,7 +999,7 @@ const checkAvailability = async () => {
             villa_id: props.villa.id,
             check_in: bookingForm.value.check_in,
             check_out: bookingForm.value.check_out,
-            guests: bookingForm.value.guests
+            guests: guestCount
         }, {
             preserveState: true,
             preserveScroll: true,
@@ -916,6 +1041,9 @@ const makeReservation = () => {
         return
     }
     
+    // Use max_guests as default if no guest count selected
+    const guestCount = bookingForm.value.guests || props.villa.max_guests
+    
     // Redirect to booking create page with form data
     router.visit('/bookings/create', {
         method: 'get',
@@ -923,7 +1051,7 @@ const makeReservation = () => {
             villa_id: props.villa.id,
             check_in: bookingForm.value.check_in,
             check_out: bookingForm.value.check_out,
-            guests: bookingForm.value.guests
+            guests: guestCount
         }
     })
 }
@@ -936,16 +1064,44 @@ const formatDate = (date) => {
     return new Date(date).toLocaleDateString('tr-TR')
 }
 
-// Watch for changes in booking form to sync with calendar
+// Watch for changes in booking form to sync with calendar and auto-check availability
 watch(() => [bookingForm.value.check_in, bookingForm.value.check_out], ([checkIn, checkOut]) => {
     if (checkIn && checkOut) {
         selectedDates.value = [checkIn, checkOut].sort()
+        
+        // Auto-check availability when both dates are selected (guest count is optional)
+        // Clear previous result first
+        availabilityResult.value = null
+        
+        // Perform local availability check immediately
+        const localCheck = checkDateRangeAvailability(checkIn, checkOut)
+        if (!localCheck.available) {
+            availabilityResult.value = localCheck
+        }
     } else if (checkIn) {
         selectedDates.value = [checkIn]
+        // Clear availability result when incomplete selection
+        availabilityResult.value = null
     } else {
         selectedDates.value = []
+        // Clear availability result when no dates selected
+        availabilityResult.value = null
     }
 }, { immediate: true })
+
+// Watch for guest count changes to trigger availability check (optional)
+watch(() => bookingForm.value.guests, (guests) => {
+    if (bookingForm.value.check_in && bookingForm.value.check_out) {
+        // Clear previous result first
+        availabilityResult.value = null
+        
+        // Perform local availability check immediately
+        const localCheck = checkDateRangeAvailability(bookingForm.value.check_in, bookingForm.value.check_out)
+        if (!localCheck.available) {
+            availabilityResult.value = localCheck
+        }
+    }
+})
 
 onMounted(() => {
     // Set default dates

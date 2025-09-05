@@ -184,7 +184,34 @@ class VillaController extends Controller
      */
     public function show(Villa $villa)
     {
-        $villa->load(['images', 'amenities', 'owner', 'reviews.user']);
+        $villa->load([
+            'images', 
+            'amenities', 
+            'owner', 
+            'reviews.user',
+            'pricings' => function($query) {
+                $query->where('is_active', true)->orderBy('start_date');
+            },
+            'availabilities' => function($query) {
+                $query->where('date', '>=', now()->format('Y-m-d'))
+                      ->orderBy('date');
+            }
+        ]);
+        
+        // Debug log to check availability data
+        \Log::info('Villa availability data loaded', [
+            'villa_id' => $villa->id,
+            'availabilities_count' => $villa->availabilities->count(),
+            'availabilities' => $villa->availabilities->map(function($avail) {
+                return [
+                    'id' => $avail->id,
+                    'date' => $avail->date,
+                    'status' => $avail->status,
+                    'is_available' => $avail->is_available,
+                    'reason' => $avail->reason
+                ];
+            })->toArray()
+        ]);
         
         if (request()->wantsJson()) {
             return new VillaResource($villa);

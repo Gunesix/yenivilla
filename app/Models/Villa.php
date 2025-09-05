@@ -58,6 +58,16 @@ class Villa extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function pricings(): HasMany
+    {
+        return $this->hasMany(VillaPricing::class);
+    }
+
+    public function availabilities(): HasMany
+    {
+        return $this->hasMany(VillaAvailability::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {
